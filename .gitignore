@@ -1,0 +1,17 @@
+*.log
+*.pot
+*.pyc
+settings_local.py
+.idea
+.env
+virtualenv
+.ropeproject
+node_modules/
+.grunt/
+npm-debug.log
+static/js/build/
+static/css/build/
+/venv/
+*.sqlite3
+_autofixture/
+*.mdb
