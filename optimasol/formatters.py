@@ -22,7 +22,7 @@ class WithCommentsHtmlFormatter(HtmlFormatter):
         # TODO: rewrite method with normal algoritm (this is just DRAFT)
         rows = [c for c in self.comments if int(c['line']) == line]
         if rows:
-            tmpl = '<span>{date}, {author}, {message}</span>\n'
+            tmpl = '<span class="comments hidden">{date}, {author}, {message}</span>'
             return ''.join(tmpl.format(**row) for row in rows)
 
     def _wrap_code(self, source):

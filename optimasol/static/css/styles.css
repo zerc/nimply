@@ -1,10 +1,38 @@
+/* Common classes */
+body .hidden {
+    display: none;
+}
+
+
+/* Header */
 .header {
     height: 50px;
     background-color: #aeaeae;
     width: 100%;
 }
 
+
+/* Code area */
 .linenodiv {
     padding: 0px 5px;
     text-align: right;
+}
+
+.comments {
+    display: block;
+    margin-left: 35px;
+    border-left: 1px solid #AEAEAE;
+    padding-left: 5px;
+}
+
+.lineno {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    line-height: 22px;
+    width: 30px;
+    text-align: right;
+    padding-right: 5px;
+    border-right: 1px solid #AEAEAE;
+    background-color: #E8E8E8;
 }
