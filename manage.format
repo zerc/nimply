@@ -1,0 +1,25 @@
+{
+    "format": "0.1",
+    "comments": {
+        "1": [
+            {
+                "date": "2014-10-13 14:00",
+                "author": "zero13cool",
+                "message": "Hello world!"
+            },
+            {
+                "date": "2014-10-13 14:00",
+                "author": "zero13cool",
+                "message": "Hello world!"
+            }
+        ],
+        "4": [
+            {
+                "line": "7",
+                "date": "2014-10-13 14:00",
+                "author": "zero13cool",
+                "message": "Comment on line 7"
+            }
+        ]
+    }
+}

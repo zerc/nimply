@@ -1,0 +1,6 @@
+<span class="comments hidden">
+    {% for comment in comments %}
+        {{ comment['date'] }}, {{ comment['author'] }}<br>
+        {{ comment['message'] }}
+    {% endfor %}
+</span>

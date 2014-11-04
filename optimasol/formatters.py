@@ -1,6 +1,8 @@
 # coding: utf-8
 import json
+from collections import defaultdict
 
+from flask import render_template
 from pygments.formatters import HtmlFormatter
 
 
@@ -11,39 +13,65 @@ class WithCommentsHtmlFormatter(HtmlFormatter):
     """
     Special formatter class for render reviewers comments.
     """
-    def __init__(self, original_filename, *args, **kwargs):
-        self.comments = load_format_file(original_filename)
+    def __init__(self, source_filename, *args, **kwargs):
+        self.comments = FormatWrapper(source_filename)
+        kwargs['hl_lines'] = self.comments.affected_lines
         return super(WithCommentsHtmlFormatter, self).__init__(*args, **kwargs)
 
     def wrap(self, source, outfile):
         return self._wrap_div(self._wrap_pre(self._wrap_code(source)))
 
-    def _get_comments_for_line(self, line):
-        # TODO: rewrite method with normal algoritm (this is just DRAFT)
-        rows = [c for c in self.comments if int(c['line']) == line]
-        if rows:
-            tmpl = '<span class="comments hidden">{date}, {author}, {message}</span>'
-            return ''.join(tmpl.format(**row) for row in rows)
-
     def _wrap_code(self, source):
         for line, row in enumerate(source, 1):
-            i, t = row
-            comments = self._get_comments_for_line(line)
             yield row
 
+            comments = self.comments.get_for_line(line)
             if comments:
                 yield 1, comments
 
 
-
-def load_format_file(original_filename):
+class FormatWrapper(object):
     """
-    Load ours `format` file for selected `original_filename`.
+    Are wrapper for doing some things with `format_file`.
     """
-    format_filename = get_format_filename(original_filename)
+    def __init__(self, source_filename):
+        """
+        :`source_filename`: are reviewed file
+        """
+        filename = get_format_filename(source_filename)
 
-    with open(format_filename, 'r') as f:
-        return json.loads(f.read())
+        # TODO: add exception handling
+        with open(filename, 'r') as f:
+            self._raw_data = json.loads(f.read())
+
+    @property
+    def affected_lines(self):
+        """
+        Return list of lines numbers who have comments.
+        """
+        # TODO: cached_property?
+        result = []
+        for l in self._raw_data['comments'].keys():
+            result.extend(self._unwrap_line(l))
+        return result
+
+    def get_for_line(self, line):
+        """
+        Return formatted string of comments for given `line` num.
+        """
+        comments = self._raw_data['comments'].get(str(line), None)
+        if comments is None:
+            return
+        return render_template('comments.html', **locals())
+
+    def _unwrap_line(self, line_str):
+        """
+        Unwrap line code like `1-4` to truly list of int's.
+        """
+        chunks = map(int, line_str.split('-'))
+        if len(chunks) == 2:
+            return list(range(chunks[0], chunks[1]+1))
+        return chunks
 
 
 def get_format_filename(original_filename):
