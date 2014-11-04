@@ -3,6 +3,25 @@ body .hidden {
     display: none;
 }
 
+.pull_right {
+    float: right;
+}
+
+button {
+    font-weight: normal;
+    text-shadow: none;
+}
+
+button.second_button {
+    background-color: #DA4545;
+    color: #E4E4E4;
+}
+
+button.primary_button {
+    background-color: #28DA96;
+    color: #E4E4E4;
+}
+
 
 /* Header */
 .header {
@@ -53,5 +72,22 @@ body .hidden {
 
 .comments__block__message {
     color: #333;
+}
+
+.comment_add_form {
+    width: 200px;
+    position: absolute;
+    background: #CCC;
+    padding: 10px;
+    top: -9999px;
+    left: 35px;
+}
+
+.comment_add_form form {
+    margin-bottom: 0;
+}
+
+.comment_add_form button {
+    margin-bottom: 0;
 }
 

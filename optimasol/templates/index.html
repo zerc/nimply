@@ -10,4 +10,16 @@
 
 {% block body %}
     {{ code|safe }}
+
+    {# Form #}
+    <div class="comment_add_form">
+        <form action="{{ url_for('add_comment') }}" name="comment_add_form">
+            <input type="text" name="author" placeholder="name" />
+            <input type="hidden" name="line" />
+            <input type="hidden" name="filename" value="{{ filename }}" />
+            <textarea name="message" placeholder="message"></textarea>
+            <button role="close" class="second_button">Отмена</button>
+            <button role="submit" class="primary_button pull_right">Запостить</button>
+        </form>
+    </div>
 {% endblock %}
