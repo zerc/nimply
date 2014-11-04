@@ -5,6 +5,7 @@ from pygments.formatters import HtmlFormatter
 
 from .app import app
 from .utils import render_to
+from .format import WithCommentsHtmlFormatter
 
 
 @app.route("/")
@@ -28,7 +29,7 @@ def base_index(data=None, filename=None):
     elif data:
         lexer = guess_lexer(data)
 
-    formatter = HtmlFormatter(linenos='table')
+    formatter = WithCommentsHtmlFormatter(filename, linenos='table')
 
     code = highlight(data, lexer, formatter)
 
