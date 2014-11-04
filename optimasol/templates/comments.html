@@ -1,6 +1,9 @@
-<span class="comments hidden">
-    {% for comment in comments %}
-        {{ comment['date'] }}, {{ comment['author'] }}<br>
-        {{ comment['message'] }}
-    {% endfor %}
-</span>
+<div class="comments hidden">
+    {%- for comment in comments -%}
+        <div class="comments__block"><div class="comments__block__header">
+            {{- comment['date'] }} / {{ comment['author'] -}}
+        </div><div class="comments__block__message">
+            {{- comment['message'] -}}
+        </div></div>
+    {%- endfor -%}
+</div>

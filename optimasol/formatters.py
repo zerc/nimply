@@ -44,6 +44,12 @@ class FormatWrapper(object):
         with open(filename, 'r') as f:
             self._raw_data = json.loads(f.read())
 
+        # special dict for getting comments for line
+        self._dict_for_get = defaultdict(list)
+        for line_code, c in self._raw_data['comments'].items():
+            key = int(line_code.split('-')[-1])
+            self._dict_for_get[key].extend(c)
+
     @property
     def affected_lines(self):
         """
@@ -59,7 +65,7 @@ class FormatWrapper(object):
         """
         Return formatted string of comments for given `line` num.
         """
-        comments = self._raw_data['comments'].get(str(line), None)
+        comments = self._dict_for_get.get(line, None)
         if comments is None:
             return
         return render_template('comments.html', **locals())

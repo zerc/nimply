@@ -18,13 +18,6 @@ body .hidden {
     text-align: right;
 }
 
-.comments {
-    display: block;
-    margin-left: 35px;
-    border-left: 1px solid #AEAEAE;
-    padding-left: 5px;
-}
-
 .lineno {
     display: inline-block;
     margin: 0;
@@ -40,3 +33,25 @@ body .hidden {
 .hll {
     cursor: pointer;
 }
+
+
+.comments {
+    display: block;
+    margin-left: 35px;
+    border-left: 1px solid #AEAEAE;
+    padding-left: 5px;
+    margin-top: -10px;
+}
+
+.comments__block {
+    margin-top: 10px;
+}
+
+.comments__block__header {
+    font-size: 0.8em;
+}
+
+.comments__block__message {
+    color: #333;
+}
+
