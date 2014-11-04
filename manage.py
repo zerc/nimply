@@ -14,7 +14,7 @@ def grab(filename):
     with open(filename, 'r') as f:
         data = f.read()
 
-    app.view_functions['index'] = lambda *args, **kwargs: base_index(data)
+    app.view_functions['index'] = lambda *a, **kw: base_index(data, filename)
     app.run()
 
 

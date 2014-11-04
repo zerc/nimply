@@ -1,0 +1,10 @@
+.header {
+    height: 50px;
+    background-color: #aeaeae;
+    width: 100%;
+}
+
+.linenodiv {
+    padding: 0px 5px;
+    text-align: right;
+}

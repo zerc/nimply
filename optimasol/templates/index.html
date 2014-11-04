@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block extra_styles %}
+    {% if code_styles %}
+        <style type="text/css">
+            {{ code_styles|safe }}
+        </style>
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+    {{ code|safe }}
+{% endblock %}
