@@ -1,4 +1,5 @@
 # coding: utf-8
+import os
 import json
 from collections import defaultdict
 from datetime import datetime
@@ -44,8 +45,11 @@ class FormatWrapper(object):
         self.filename = get_format_filename(source_filename)
 
         # TODO: add exception handling
-        with open(self.filename, 'r') as f:
-            self._raw_data = json.loads(f.read())
+        if not os.path.exists(self.filename):
+            self._raw_data = {'format': '0.1', 'comments': {}}
+        else:
+            with open(self.filename, 'r') as f:
+                self._raw_data = json.loads(f.read())
 
         # special dict for getting comments for line
         self._dict_for_get = defaultdict(list)
