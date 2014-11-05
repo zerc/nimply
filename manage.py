@@ -1,7 +1,7 @@
 # coding: utf-8
 from flask.ext.script import Manager
 
-from optimasol import app, base_index
+from nimply import app, base_index
 
 manager = Manager(app)
 
