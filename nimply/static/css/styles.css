@@ -28,10 +28,13 @@ form, input, ol, ul {
 }
 
 /* Header */
-.header {
-    height: 50px;
+.header_wrapper {
     background-color: #aeaeae;
     width: 100%;
+}
+
+.header {
+    /*margin-bottom: 0;*/
 }
 
 /* Index page */
@@ -51,6 +54,11 @@ form, input, ol, ul {
 
 
 /* Code area */
+.highlight {
+    margin-top: -20px;
+    position: relative;
+}
+
 .linenodiv {
     padding: 0px 5px;
     text-align: right;
@@ -102,3 +110,8 @@ form, input, ol, ul {
     left: 35px;
 }
 
+/* Footer */
+.footer {
+    text-align: center;
+    border-top: 1px solid #aeaeae;
+}
