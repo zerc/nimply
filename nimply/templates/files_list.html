@@ -1,0 +1,7 @@
+<ol>
+{% for fname in variant.files_list %}
+    <li>
+        <a href="?filename={{ fname }}">{{ fname }}</a>
+    </li>
+{% endfor %}
+</ol>

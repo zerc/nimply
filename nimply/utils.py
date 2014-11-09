@@ -1,4 +1,5 @@
 # coding: utf-8
+import importlib
 from functools import wraps
 
 from flask import render_template
@@ -25,3 +26,21 @@ def render_to(template=None):
             return render_template(template_name, **ctx), status_code
         return decorated_function
     return decorator
+
+
+# cache for imported modules
+_IMPORTED = {}
+
+
+def load_object_from_string(full_path):
+    """
+    Load object (class, function and other) from dot separated string.
+    """
+    path, obj_name = full_path.rsplit('.', 1)
+
+    try:
+        module = _IMPORTED[path]
+    except KeyError:
+        module = _IMPORTED[path] = importlib.import_module(path)
+
+    return getattr(module, obj_name)

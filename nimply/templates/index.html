@@ -9,7 +9,13 @@
 {% endblock %}
 
 {% block body %}
-    {{ code|safe }}
+    {% if code %}
+        {{ code|safe }}
+    {% else %}
+        {% for source_variant in source_variants %}
+            {{ source_variant.render()|safe }}
+        {% endfor %}
+    {% endif %}
 
     {# Form #}
     <div class="comment_add_form">
