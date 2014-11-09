@@ -10,6 +10,7 @@ body .hidden {
 button {
     font-weight: normal;
     text-shadow: none;
+    margin-bottom: 0;
 }
 
 button.second_button {
@@ -22,12 +23,30 @@ button.primary_button {
     color: #E4E4E4;
 }
 
+form, input, ol, ul {
+    margin-bottom: 0;
+}
 
 /* Header */
 .header {
     height: 50px;
     background-color: #aeaeae;
     width: 100%;
+}
+
+/* Index page */
+.variants_info {
+
+}
+
+.variant_block {
+    border: 2px solid #ccc;
+    padding: 10px;
+}
+
+.variant__upload_form {
+
+    text-align: center;
 }
 
 
@@ -81,13 +100,5 @@ button.primary_button {
     padding: 10px;
     top: -9999px;
     left: 35px;
-}
-
-.comment_add_form form {
-    margin-bottom: 0;
-}
-
-.comment_add_form button {
-    margin-bottom: 0;
 }
 

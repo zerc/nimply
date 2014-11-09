@@ -1,4 +1,5 @@
-<form name="upload_form" action="{{ variant.url }}" method="POST" enctype="multipart/form-data">
-    <input type=file name=file>
-    <input type=submit value=Upload>
+<h4>Upload file</h4>
+<form class="variant__upload_form" name="upload_form" action="{{ variant.url }}" method="POST" enctype="multipart/form-data">
+    <input type="file" name="file">
+    <button role="submit" class="primary_button">Upload</button>
 </form>

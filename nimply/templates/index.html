@@ -1,5 +1,15 @@
 {% extends 'base.html' %}
 
+{% macro render_center(text, css=None) %}
+    <div class="row">
+        <div class="five columns">&nbsp;</div>
+        <div class="six columns{% if css %} {{ css }}{% endif %}">
+            {{ text }}
+        </div>
+        <div class="five columns">&nbsp;</div>
+    </div>
+{% endmacro %}
+
 {% block extra_styles %}
     {% if code_styles %}
         <style type="text/css">
@@ -9,13 +19,18 @@
 {% endblock %}
 
 {% block body %}
-    {% if code %}
-        {{ code|safe }}
-    {% else %}
-        {% for source_variant in source_variants %}
-            {{ source_variant.render()|safe }}
-        {% endfor %}
-    {% endif %}
+    <div class="container">
+        {% if code %}
+            {{ code|safe }}
+        {% elif source_variants %}
+            {% for source_variant in source_variants %}
+                {% if loop.first %}
+                    {{ render_center('Use any method listed below to specify a file for review:', 'variants_info') }}
+                {% endif %}
+                {{ render_center(source_variant.render()|safe, 'variant_block') }}
+            {% endfor %}
+        {% endif %}
+    </div>
 
     {# Form #}
     <div class="comment_add_form">
@@ -24,8 +39,9 @@
             <input type="hidden" name="line" />
             <input type="hidden" name="filename" value="{{ filename }}" />
             <textarea name="message" placeholder="message"></textarea>
-            <button role="close" class="second_button">Отмена</button>
-            <button role="submit" class="primary_button pull_right">Запостить</button>
+            <button role="close" class="second_button">Cancel</button>
+            <button role="submit" class="primary_button pull_right">Post</button>
         </form>
     </div>
+
 {% endblock %}
