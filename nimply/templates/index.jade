@@ -1,0 +1,6 @@
+extends base
+
+
+block body
+    - for source_variant in source_variants
+        {{ source_variant.render()|safe }}

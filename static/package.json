@@ -1,0 +1,29 @@
+{
+  "author": "Vladimir Savin",
+  "name": "CodeReviewTool",
+  "version": "0.1.0",
+  "homepage": "http://crwt.zerc.ru",
+  "dependencies": {},
+  "devDependencies": {
+    "gulp": "~3.8.10",
+    "gulp-watch": "~0.4.1",
+    "gulp-util": "*",
+    "gulp-clean": "~0.2.2",
+    "gulp-rev": "~0.2.0",
+    "gulp-uglify": "~0.1.0",
+    "gulp-minify-css": "~0.2.0",
+    "gulp-less": "^3.0.2",
+    "run-sequence": "^1.0.2",
+    "del": "^1.1.1",
+    "react": "^0.13.1",
+    "gulp-concat": "^2.5.2",
+    "react-router": "^0.13.2",
+    "browserify": "^9.0.3",
+    "vinyl-source-stream": "^1.1.0",
+    "reactify": "^1.1.0",
+    "qwest": "^1.5.10",
+    "underscore": "^1.8.2",
+    "Skeleton-Less": "git://github.com/whatsnewsaes/Skeleton-Less",
+    "normalize.css": "^3.0.3"
+  }
+}

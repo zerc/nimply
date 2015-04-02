@@ -5,7 +5,7 @@ from pygments.lexers import guess_lexer, guess_lexer_for_filename
 from pygments.formatters import HtmlFormatter
 from flask import request, jsonify
 
-from nimply.app import app
+from nimply.app import nimply as app
 from nimply.utils import render_to
 from nimply.formatters import WithCommentsHtmlFormatter, FormatWrapper
 from nimply.bl.wrapper import SourceFile
@@ -28,7 +28,7 @@ def index():
     return base_index(data, filename, extra=locals())
 
 
-@render_to('index.html')
+@render_to('index.jade')
 def base_index(data=None, filename=None, extra=None):
     """
     Low-level implemenation of main page.

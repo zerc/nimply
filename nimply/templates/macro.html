@@ -1,9 +1,0 @@
-{% macro render_center(text, css=None) %}
-    <div class="row">
-        <div class="five columns">&nbsp;</div>
-        <div class="six columns{% if css %} {{ css }}{% endif %}">
-            {{ text }}
-        </div>
-        <div class="five columns">&nbsp;</div>
-    </div>
-{% endmacro %}

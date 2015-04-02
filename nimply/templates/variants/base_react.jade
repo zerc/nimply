@@ -1,0 +1,10 @@
+//- Base template for rendering ReactJs based apps
+script(type="text/javascript")
+    (function () {
+        window.VARIANTS = window.VARIANTS || [];
+        var createVariant = function (React, _) {
+            return {{ rendered_variant|safe }}
+        }
+
+        window.VARIANTS.push(createVariant);
+    }());

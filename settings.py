@@ -10,6 +10,8 @@ ALLOWED_EXTENSIONS = ['py']
 DEBUG = True
 
 ALLOW_SOURCE_VARIANTS = (
-    'nimply.bl.variants.UploadVariant',
-    'nimply.bl.variants.ListVariant',
+    # 'nimply.bl.variants.UploadVariant',
+    # 'nimply.bl.variants.ListVariant',
+    # 'nimply.bl.variants.SimpleReactVariant',
+    'nimply.bl.variants.ListReactVariant',
 )

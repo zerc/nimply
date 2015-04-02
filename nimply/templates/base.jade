@@ -1,0 +1,30 @@
+doctype html
+html
+    head
+        meta(charset='utf-8')
+        meta(http-equiv="X-UA-Compatible", content="IE=edge")
+        meta(name="yandex-verification", content="")
+        meta(name="google-site-verification", content="")
+
+        title
+            block title
+
+        link(rel="stylesheet", type="text/css", href="{{ url_for('static', filename='css/normalize.css') }}")
+        link(rel="stylesheet", type="text/css", href="{{ url_for('static', filename='css/skeleton.css') }}")
+        link(rel="stylesheet", type="text/css", href="{{ url_for('static', filename='css/styles.css') }}")
+
+        block extra_styles
+
+    body
+        div.body_wrapper
+            block header
+                include header
+
+            div.container.site_body(id="content")
+                block body
+
+        block footer
+            include footer
+
+        block js
+            script(src="{{ url_for('static', filename='js/app.js') }}", type="text/javascript")

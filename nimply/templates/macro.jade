@@ -1,0 +1,6 @@
+- macro render_center(text, css=None)
+    div.row
+        div.five.columns &nbsp;
+        div(class="six columns{% if css %} {{ css }}{% endif %}")
+            {{ text }}
+        div.five.columns &nbsp;
