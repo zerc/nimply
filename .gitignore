@@ -16,3 +16,5 @@ static/css/build/
 _autofixture/
 *.mdb
 upload/
+*.format
+static/build/
