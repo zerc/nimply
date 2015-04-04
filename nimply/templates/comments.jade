@@ -1,9 +1,7 @@
 div.comments.hidden
-    {%- for comment in comments -%}
+    - for comment in comments
         div.comments__block
             div.comments__block__header
                 {{- comment['date'] }} / {{ comment['author'] -}}
             div.comments__block__message
                 {{- comment['message'] -}}
-    {%- endfor -%}
-

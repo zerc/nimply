@@ -4,8 +4,9 @@ from pygments import highlight
 from pygments.lexers import guess_lexer, guess_lexer_for_filename
 from pygments.formatters import HtmlFormatter
 from flask import request, jsonify
+from flask_restful import Resource
 
-from nimply.app import nimply as app
+from nimply.app import nimply as app, api
 from nimply.utils import render_to
 from nimply.formatters import WithCommentsHtmlFormatter, FormatWrapper
 from nimply.bl.wrapper import SourceFile
@@ -55,13 +56,19 @@ def base_index(data=None, filename=None, extra=None):
     return result
 
 
-@app.route('/file/<slug>/', methods=['GET'])
-@render_to('review.html')
-def review():
-    """
-    View for doing file review.
-    """
-    return locals()
+class FileResource(Resource):
+    def get(self, fname):
+        result = {}
+        wrapper = SourceFile(app.app, fname)
+        data, filename = wrapper.data, wrapper.fname
+        lexer = guess_lexer_for_filename(filename, data)
+        formatter = WithCommentsHtmlFormatter(filename, linenos='inline')
+        result['code'] = highlight(data, lexer, formatter)
+        result['code_styles'] = formatter.get_style_defs('.highlight')
+        return result
+
+
+api.add_resource(FileResource, '/api/media/<string:fname>')
 
 
 @app.route('/comment/', methods=['POST'])
@@ -82,3 +89,9 @@ def add_comment():
         request.form['line'], request.form['author'], request.form['message'])
     wrapper.save()
     return jsonify({'status': True})
+
+
+@app.context_processor
+def get_code_styles():
+    formatter = WithCommentsHtmlFormatter('')
+    return dict(code_styles=formatter.get_style_defs('.highlight'))

@@ -14,4 +14,5 @@ app.config.from_object('settings')
 
 app.jinja_env.add_extension('pyjade.ext.jinja.PyJadeExtension')
 app.jinja_env.filters['jsonify'] = json.dumps
+# app.jinja_env.functions['get_code_styles'] = lambda: 'asdsda'
 app.register_blueprint(nimply)

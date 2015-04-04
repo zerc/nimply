@@ -1,5 +1,6 @@
 # coding: utf-8
 from flask import Blueprint as BaseBlueprint
+from flask_restful import Api
 
 from nimply.utils import load_object_from_string
 
@@ -9,9 +10,11 @@ class Blueprint(BaseBlueprint):
         state = super(Blueprint, self).make_setup_state(
             app, options, first_registration)
         registrator(state, app, self)
+        self.app = app
         return state
 
 nimply = Blueprint('nimply', __name__, template_folder='templates')
+api = Api(nimply)
 
 
 def registrator(state, app, self):

@@ -75,7 +75,7 @@ class FormatWrapper(object):
         comments = self._dict_for_get.get(line, None)
         if comments is None:
             return
-        return render_template('comments.html', **locals())
+        return render_template('comments.jade', **locals())
 
     def add_comment(self, line, author, message):
         """

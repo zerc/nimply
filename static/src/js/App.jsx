@@ -1,22 +1,32 @@
 var React = require('react'),
     _ = require('underscore'),
-    Box = React.createClass({
-      getChilds: function () {
-        var self = this;
-        return _.map(window.VARIANTS, function(f) {
-          return React.createElement(f.call(self, React, _), null);
-        });
-      },
+    Router = require('react-router'),
 
-      render: function () {
-        var childs = this.getChilds();
-        return (
-          React.createElement(
-            'div', {'class': 'container'}, childs)
-        );
-      }
-    });
+    DefaultRoute = Router.DefaultRoute,
+    Link = Router.Link,
+    Route = Router.Route,
+    RouteHandler = Router.RouteHandler,
 
-module.exports = Box;
+    FileView = require('./FileView.jsx'),
+    VariantsView = require('./VariantsView.jsx'),
 
-React.render(<Box />, document.getElementById('content'));
+    App = React.createClass({
+        render: function () {
+          return (
+            <div>
+              <RouteHandler/>
+            </div>
+          );
+        }
+    }),
+
+    ROUTES = (
+        <Route name="app" path="/" handler={App}>
+            <Route name="fileview" path="/file/?:fname?" handler={FileView} />
+            <DefaultRoute handler={VariantsView} />
+        </Route>
+    );
+
+Router.run(ROUTES, function (Handler, state) {
+    React.render(<Handler />, document.getElementById('content'));
+});

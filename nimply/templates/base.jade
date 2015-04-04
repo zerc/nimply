@@ -13,6 +13,9 @@ html
         link(rel="stylesheet", type="text/css", href="{{ url_for('static', filename='css/skeleton.css') }}")
         link(rel="stylesheet", type="text/css", href="{{ url_for('static', filename='css/styles.css') }}")
 
+        style
+            {{ code_styles|safe }}
+
         block extra_styles
 
     body
