@@ -23,6 +23,7 @@ class WithCommentsHtmlFormatter(HtmlFormatter):
         return super(WithCommentsHtmlFormatter, self).__init__(*args, **kwargs)
 
     def wrap(self, source, outfile):
+        return self._wrap_code(source)
         return self._wrap_div(self._wrap_pre(self._wrap_code(source)))
 
     def _wrap_code(self, source):
@@ -32,6 +33,45 @@ class WithCommentsHtmlFormatter(HtmlFormatter):
             comments = self.comments.get_for_line(line)
             if comments:
                 yield 1, comments
+
+    def _wrap_inlinelinenos(self, inner):
+        # need a list of lines since we need the width of a single number :(
+        lines = list(inner)
+        sp = self.linenospecial
+        st = self.linenostep
+        num = self.linenostart
+        mw = len(str(len(lines) + num - 1))
+
+        if self.noclasses:
+            if sp:
+                for t, line in lines:
+                    if num%sp == 0:
+                        style = 'background-color: #ffffc0; padding: 0 5px 0 5px'
+                    else:
+                        style = 'background-color: #f0f0f0; padding: 0 5px 0 5px'
+                    yield 1, '<span style="%s">%*s</span> ' % (
+                        style, mw, (num%st and ' ' or num)) + line
+                    num += 1
+            else:
+                for t, line in lines:
+                    yield 1, ('<span style="background-color: #f0f0f0; '
+                              'padding: 0 5px 0 5px">%*s</span> ' % (
+                              mw, (num%st and ' ' or num)) + line)
+                    num += 1
+        elif sp:
+            for t, line in lines:
+                yield 1, line
+                num += 1
+        else:
+            for t, line in lines:
+                yield 1, line
+                num += 1
+
+    def _wrap_linespans(self, inner):
+        s = self.linespans
+        i = self.linenostart - 1
+        for t, line in inner:
+            yield 1, line
 
 
 class FormatWrapper(object):

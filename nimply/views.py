@@ -63,8 +63,12 @@ class FileResource(Resource):
         data, filename = wrapper.data, wrapper.fname
         lexer = guess_lexer_for_filename(filename, data)
         formatter = WithCommentsHtmlFormatter(filename, linenos='inline')
-        result['code'] = highlight(data, lexer, formatter)
-        result['code_styles'] = formatter.get_style_defs('.highlight')
+        result['code'] = highlight(data, lexer, formatter).splitlines()
+        # result['code'] = (highlight(data, lexer, formatter)
+        #                   .replace('\n', '')
+        #                   .replace('</span></span>', '</span></span>\n')
+        #                   .splitlines())
+        # result['code_styles'] = formatter.get_style_defs('.highlight')
         return result
 
 
