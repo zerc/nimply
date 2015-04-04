@@ -14,4 +14,5 @@ ALLOW_SOURCE_VARIANTS = (
     # 'nimply.bl.variants.ListVariant',
     # 'nimply.bl.variants.SimpleReactVariant',
     'nimply.bl.variants.ListReactVariant',
+    'nimply.bl.variants.UploadReactVariant',
 )
