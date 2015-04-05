@@ -6,9 +6,21 @@ from datetime import datetime
 
 from flask import render_template
 from pygments.formatters import HtmlFormatter
+from pygments import highlight as base_highlight
 
 
 __ALL__ = ('WithCommentsHtmlFormatter', 'FormatWrapper')
+
+
+def highlight(code, lexer, formatter):
+    result = base_highlight(code, lexer, formatter)
+    # affected_lines = self.comments.affected_lines
+    return [dict(
+            line=line,
+            code=code,
+            comments=formatter.comments.get_for_line(line)
+            ) for line, code in
+            enumerate(result.splitlines(), 1)]
 
 
 class WithCommentsHtmlFormatter(HtmlFormatter):
@@ -17,22 +29,22 @@ class WithCommentsHtmlFormatter(HtmlFormatter):
     """
     def __init__(self, source_filename, *args, **kwargs):
         self.comments = FormatWrapper(source_filename)
-        kwargs['hl_lines'] = self.comments.affected_lines
+        # kwargs['hl_lines'] = self.comments.affected_lines
         kwargs['linespans'] = 'line'
         # kwargs['anchorlinenos'] = True
         return super(WithCommentsHtmlFormatter, self).__init__(*args, **kwargs)
 
     def wrap(self, source, outfile):
         return self._wrap_code(source)
-        return self._wrap_div(self._wrap_pre(self._wrap_code(source)))
+        # return self._wrap_div(self._wrap_pre(self._wrap_code(source)))
 
     def _wrap_code(self, source):
         for line, row in enumerate(source, 1):
             yield row
 
-            comments = self.comments.get_for_line(line)
-            if comments:
-                yield 1, comments
+            # comments = self.comments.get_for_line(line)
+            # if comments:
+            #     yield 1, comments
 
     def _wrap_inlinelinenos(self, inner):
         # need a list of lines since we need the width of a single number :(
@@ -113,8 +125,10 @@ class FormatWrapper(object):
         Return formatted string of comments for given `line` num.
         """
         comments = self._dict_for_get.get(line, None)
+        return comments
         if comments is None:
             return
+
         return render_template('comments.jade', **locals())
 
     def add_comment(self, line, author, message):
@@ -128,6 +142,7 @@ class FormatWrapper(object):
                 'message': message
             }
         )
+        return self._raw_data['comments'][line][-1]
 
     def save(self):
         with open(self.filename, 'w') as f:

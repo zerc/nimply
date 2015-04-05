@@ -1,6 +1,6 @@
 # coding: utf-8
 import os
-from pygments import highlight
+# from pygments import highlight
 from pygments.lexers import guess_lexer, guess_lexer_for_filename
 from pygments.formatters import HtmlFormatter
 from flask import request, jsonify
@@ -8,7 +8,7 @@ from flask_restful import Resource
 
 from nimply.app import nimply as app, api
 from nimply.utils import render_to
-from nimply.formatters import WithCommentsHtmlFormatter, FormatWrapper
+from nimply.formatters import WithCommentsHtmlFormatter, FormatWrapper, highlight
 from nimply.bl.wrapper import SourceFile
 
 
@@ -63,7 +63,7 @@ class FileResource(Resource):
         data, filename = wrapper.data, wrapper.fname
         lexer = guess_lexer_for_filename(filename, data)
         formatter = WithCommentsHtmlFormatter(filename, linenos='inline')
-        result['code'] = highlight(data, lexer, formatter).splitlines()
+        result['code'] = highlight(data, lexer, formatter)
         # result['code'] = (highlight(data, lexer, formatter)
         #                   .replace('\n', '')
         #                   .replace('</span></span>', '</span></span>\n')
@@ -75,24 +75,26 @@ class FileResource(Resource):
 api.add_resource(FileResource, '/api/media/<string:fname>')
 
 
-@app.route('/comment/', methods=['POST'])
-def add_comment():
-    """
-    Add comment to selected `line` of `filename`.
-    Expected POST params:
-        :line: souce line (str)
-        :filename: source code filename (str)
-        :author: author's name (str)
-        :message: message (str)
-    Returns:
-        Status by jsonify string
-    """
-    # TODO: add some validation and error handling
-    wrapper = FormatWrapper(request.form['filename'])
-    wrapper.add_comment(
-        request.form['line'], request.form['author'], request.form['message'])
-    wrapper.save()
-    return jsonify({'status': True})
+class CommentResource(Resource):
+    def post(self):
+        """
+        Add comment to selected `line` of `filename`.
+        Expected POST params:
+            :line: souce line (str)
+            :filename: source code filename (str)
+            :author: author's name (str)
+            :message: message (str)
+        Returns:
+            Status by jsonify string
+        """
+        # TODO: add some validation and error handling
+        wrapper = FormatWrapper(request.form['filename'])
+        comment = wrapper.add_comment(
+            request.form['line'], request.form['author'], request.form['message'])
+        wrapper.save()
+        return comment
+
+api.add_resource(CommentResource, '/comment/')
 
 
 @app.context_processor
