@@ -1,16 +1,13 @@
-var React = require('react'),
-    _ = require('underscore'),
-    Router = require('react-router'),
-
-    DefaultRoute = Router.DefaultRoute,
-    Link = Router.Link,
-    Route = Router.Route,
-    RouteHandler = Router.RouteHandler,
+var L = require('./Libs.js'),
+    React = L.React,
+    RouteHandler = L.Router.RouteHandler,
+    Route = L.Router.Route,
+    DefaultRoute = L.Router.DefaultRoute,
 
     FileView = require('./FileView.jsx'),
     VariantsView = require('./VariantsView.jsx'),
 
-    App = React.createClass({
+    App = L.React.createClass({
         render: function () {
           return (
             <div>
@@ -27,6 +24,6 @@ var React = require('react'),
         </Route>
     );
 
-Router.run(ROUTES, function (Handler, state) {
+L.Router.run(ROUTES, function (Handler, state) {
     React.render(<Handler />, document.getElementById('content'));
 });

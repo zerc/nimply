@@ -1,9 +1,10 @@
 # coding: utf-8
-import importlib
 from functools import wraps
 
 from flask import render_template
 from werkzeug.wrappers import BaseResponse
+
+__ALL__ = ('render_to',)
 
 
 def render_to(template=None):
@@ -21,26 +22,8 @@ def render_to(template=None):
 
             template_name = template
             if template_name is None:
-                template_name = f.__name__ + '.html'
+                template_name = f.__name__ + '.jade'
 
             return render_template(template_name, **ctx), status_code
         return decorated_function
     return decorator
-
-
-# cache for imported modules
-_IMPORTED = {}
-
-
-def load_object_from_string(full_path):
-    """
-    Load object (class, function and other) from dot separated string.
-    """
-    path, obj_name = full_path.rsplit('.', 1)
-
-    try:
-        module = _IMPORTED[path]
-    except KeyError:
-        module = _IMPORTED[path] = importlib.import_module(path)
-
-    return getattr(module, obj_name)

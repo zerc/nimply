@@ -1,6 +1,10 @@
-var React = require('react'),
-    qwest = require('qwest'),
-    _ = require('underscore'),
+/*
+ * Module for work with comments.
+ */
+var L = require('./Libs.js'),
+    React = L.React,
+    API_URLS = require('./Urls.js'),
+
     Comment = React.createClass({
         render: function () {
             return (
@@ -17,17 +21,34 @@ var React = require('react'),
     }),
 
     CommentsList = React.createClass({
+        getInitialState: function() {
+            return {comments: this.props.comments || []};
+        },
+
+        appendComment: function (comment) {
+            this.state.comments.push(comment);
+            this.forceUpdate();
+        },
+
         render: function () {
-            var comments = this.props.comments || [];
+            var form = null,
+                comments = this.state.comments || [];
+
+            if (this.props.showform) {
+                form = <CommentForm formcontrol={this.props.formcontrol}
+                                    line={this.props.line}
+                                    callback={this.appendComment} />;
+            }
 
             return (
                 <div className="comments">
-                    {_.map(comments, function (comment) {
+                    {L._.map(comments, function (comment) {
                         return <Comment
                             author={comment.author}
                             date={comment.date}
                             message={comment.message} />
                     })}
+                    {form}
                 </div>
             )
         }
@@ -46,10 +67,8 @@ var React = require('react'),
             var self = this,
                 author = React.findDOMNode(this.refs.author).value.trim(),
                 message = React.findDOMNode(this.refs.message).value.trim(),
-                form_data = {
-                    line: this.props.line,
-                    'filename': this.context.router.getCurrentParams().fname
-                };
+                fname = this.context.router.getCurrentParams().fname,
+                form_data = {line: this.props.line,};
 
             if (!author || !message) {
                 return false;
@@ -58,8 +77,10 @@ var React = require('react'),
             form_data['message'] = message;
             form_data['author'] = author;
 
-            qwest
-                .post('/comment/', form_data, {responseType: 'json'})
+            L.request
+                .post(API_URLS.comments_add(fname),
+                      form_data,
+                      {responseType: 'json'})
                 .then(function (response) {
                     self.props.callback(response);
                     self.hideForm();
@@ -74,47 +95,19 @@ var React = require('react'),
                     </div>
                     <div className="row">
                         <textarea name="message" placeholder="message" ref="message"></textarea>
-                    </div>
-                    <div className="row">
-                        <div className="six columns">
-                            <button role="close" className="second_button" onClick={this.hideForm}>Cancel</button>
-                        </div>
-                        <div className="six columns">
-                            <button role="submit" className="primary_button pull_right" onClick={this.postForm}>Post</button>
+                        <div>
+                            <div className="six columns">
+                                <button className="second_button" onClick={this.hideForm}>Cancel</button>
+                            </div>
+                            <div className="six columns">
+                                <button className="primary_button pull_right" onClick={this.postForm}>Post</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             )
         }
-    }),
-
-    CommentsBlock = React.createClass({
-        getInitialState: function() {
-            return {comments: this.props.comments || []};
-        },
-
-        appendComment: function (comment) {
-            this.state.comments.push(comment);
-            this.forceUpdate();
-        },
-
-        render: function () {
-            var form = null;
-
-            if (this.props.showform) {
-                form = <CommentForm formcontrol={this.props.formcontrol}
-                                    line={this.props.line}
-                                    callback={this.appendComment} />;
-            }
-
-            return (
-                <div className="comments">
-                    <CommentsList comments={this.state.comments} />
-                    {form}
-                </div>
-            );
-        }
     });
 
 
-module.exports = CommentsBlock;
+module.exports = CommentsList;

@@ -1,6 +1,9 @@
-var React = require('react'),
-    qwest = require('qwest'),
-    _ = require('underscore'),
+/*
+ * Module for works with files.
+ */
+var L = require('./Libs.js'),
+    React = L.React,
+    API_URLS = require('./Urls.js'),
     CommentsBlock = require('./Comments.jsx'),
 
     LineView = React.createClass({
@@ -12,19 +15,27 @@ var React = require('react'),
         },
 
         render: function () {
+            var row_cls_name = !L._.isEmpty(this.props['data-comments']) ? 'have_comments' : '';
+
             return (
-                <div>
-                    <span onClick={this.toggleForm}>{this.props['data-line']}</span>
-                    <span dangerouslySetInnerHTML={{__html: this.props['data-code'] }}></span>
-                    <CommentsBlock
-                        comments={this.props['data-comments']}
-                        showform={this.state.show_form}
-                        formcontrol={this.toggleForm}
-                        line={this.props['data-line']} />
-                </div>
+                <tr className={row_cls_name}>
+                    <td className="highlight__linenum"
+                        onClick={this.toggleForm}
+                        data-linenum={this.props['data-line']}>
+                    </td>
+                    <td className="highlight__code">
+                        <span dangerouslySetInnerHTML={{__html: this.props['data-code'] }}></span>
+                        <CommentsBlock
+                            comments={this.props['data-comments']}
+                            showform={this.state.show_form}
+                            formcontrol={this.toggleForm}
+                            line={this.props['data-line']} />
+                     </td>
+                </tr>
             );
         }
     }),
+
     FileView = React.createClass({
       contextTypes: {
         router: React.PropTypes.func
@@ -41,8 +52,8 @@ var React = require('react'),
         var self = this,
             fname = self.getFileId();
 
-        qwest.get(
-            '/api/media/'+fname,
+        L.request.get(
+            API_URLS.file_detail(fname),
             null,
             {responseType: 'json'}
         ).then(function (data) {
@@ -51,21 +62,22 @@ var React = require('react'),
       },
 
       render: function () {
-        if (this.getFileId() && _.isEmpty(this.state)) {
+        if (this.getFileId() && L._.isEmpty(this.state)) {
           this.loadFile();
         }
 
         if (this.state.data) {
-          return (<pre className="highlight">
-            {_.map(this.state.data.code, function (line) {
+          return (
+            <table className="highlight"><tbody>
+            {L._.map(this.state.data.code, function (line) {
                 return <LineView
                     data-code={line.code}
                     data-line={line.line}
                     data-comments={line.comments} />
             })}
-            </pre>);
+            </tbody></table>);
         }
-        return (<span></span>);
+        return null;
       }
     });
 
