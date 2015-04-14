@@ -2,15 +2,15 @@
 from flask_restful import Resource
 from flask import request
 
-from .bl.wrapper import FormatWrapper
-from .app import api
+from .bl.wrapper import MongoCommentsWrapper as CommentsWrapper
+from .app import api, app
 
 
 class CommentsResource(Resource):
     def get(self, fname):
         """ Fetch comments for file.
         """
-        return FormatWrapper(fname).all()
+        return CommentsWrapper(app.app.mongo.db, fname).all()
 
     def post(self, fname):
         """
@@ -22,11 +22,10 @@ class CommentsResource(Resource):
         Returns:
             Status by jsonify string
         """
-        wrapper = FormatWrapper(fname)
+        wrapper = CommentsWrapper(app.app.mongo.db, fname)
         comment = wrapper.add_comment(request.form['line'],
                                       request.form['author'],
                                       request.form['message'])
-        wrapper.save()
         return comment
 
 api.add_resource(CommentsResource, '/api/comments/<string:fname>')

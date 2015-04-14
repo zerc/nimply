@@ -1,6 +1,7 @@
 # coding: utf-8
 import json
 from flask import Flask
+from flask.ext.pymongo import PyMongo
 
 from nimply.app import app as nimply
 from files.app import app as files_app
@@ -13,6 +14,8 @@ app = Flask(
     instance_relative_config=True,
     static_folder='static/build/',
     static_url_path='/static')
+
+app.mongo = PyMongo(app)
 
 app.config.from_object('settings')
 

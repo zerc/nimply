@@ -5,6 +5,44 @@ from datetime import datetime
 from collections import OrderedDict
 
 from dateutil.parser import parse
+from comments.app import app
+
+
+class MongoCommentsWrapper(object):
+    """ Store comments into MongoDB.
+    """
+    def __init__(self, db, filename):
+        self.filename = filename
+        self.collection = db.comments
+
+    def add_comment(self, line, author, message):
+        comment = self.pre_save_comment(line, author, message)
+        self.collection.insert(comment)
+        return self.post_save_comment(comment)
+
+    def pre_save_comment(self, line, author, message):
+        comment = {
+            'filename': self.filename,
+            'line': [line],
+            'author': author,
+            'message': message,
+            'date': datetime.now(),
+        }
+        return comment
+
+    def post_save_comment(self, comment):
+        comment.pop('_id')
+        comment['date'] = comment['date'].strftime('%d-%m-%Y %H:%M')
+        return comment
+
+    def get_for_line(self, line):
+        comments = self.collection.find({'line': str(line),
+                                         'filename': self.filename})
+        return [self.post_save_comment(comment) for comment in comments]
+
+    def all(self):
+        comments = self.collection.find({'filename': self.filename})
+        return [self.post_save_comment(comment) for comment in comments]
 
 
 class FormatWrapper(object):

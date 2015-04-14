@@ -9,7 +9,8 @@ from pygments.formatters import HtmlFormatter
 from pygments import highlight as base_highlight
 from pygments.lexers import guess_lexer_for_filename
 
-from comments.bl.wrapper import FormatWrapper
+from comments.bl.wrapper import MongoCommentsWrapper as CommentsWrapper
+from .app import api, app
 
 __ALL__ = ('WithCommentsHtmlFormatter',)
 
@@ -18,7 +19,7 @@ def highlight(filename, code):
     lexer = guess_lexer_for_filename(filename, code)
     formatter = WithCommentsHtmlFormatter(filename, linenos='inline')
     result = base_highlight(code, lexer, formatter)
-    comments = FormatWrapper(filename)
+    comments = CommentsWrapper(app.app.mongo.db, filename)
     return [dict(
             line=line,
             code=code,
