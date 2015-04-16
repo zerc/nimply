@@ -1,8 +1,10 @@
 # coding: utf-8
 import os
+from uuid import uuid4
 
 from werkzeug import secure_filename
 from flask import render_template
+from gridfs import GridFS, NoFile
 
 
 class BaseVariant(object):
@@ -61,4 +63,18 @@ class UploadMixin(object):
 
         return default
 
-        # file.save(os.path.join(self.upload_dir, file.filename))
+
+class MongoUploadMixin(UploadMixin):
+    """ Upload file into mongodb GridFS storage.
+    """
+    def upload(self, request):
+        storage = GridFS(self.app.mongo.db)
+
+        file = request.files.get('file')
+
+        if not file or not self.allowed_file(file.filename):
+            return None, None
+
+        uuid = unicode(uuid4())
+        storage.put(file, filename=file.filename,  uuid=uuid, version=0)
+        return uuid, None

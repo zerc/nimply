@@ -15,11 +15,11 @@ from .app import api, app
 __ALL__ = ('WithCommentsHtmlFormatter',)
 
 
-def highlight(filename, code):
+def highlight(filename, code, uuid):
     lexer = guess_lexer_for_filename(filename, code)
     formatter = WithCommentsHtmlFormatter(filename, linenos='inline')
     result = base_highlight(code, lexer, formatter)
-    comments = CommentsWrapper(app.app.mongo.db, filename)
+    comments = CommentsWrapper(app.app.mongo.db, uuid)
     return [dict(
             line=line,
             code=code,

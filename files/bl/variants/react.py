@@ -3,7 +3,7 @@ import os
 import json
 
 from flask import request
-from .base import BaseReactVariant, UploadMixin
+from .base import BaseReactVariant, UploadMixin, MongoUploadMixin
 
 __ALL__ = ('ListReactVariant', 'UploadReactVariant')
 
@@ -25,7 +25,7 @@ class ListReactVariant(BaseReactVariant):
         return os.listdir(self.upload_dir)
 
 
-class UploadReactVariant(UploadMixin, BaseReactVariant):
+class UploadReactVariant(MongoUploadMixin, BaseReactVariant):
     template = 'react_upload.js'
     url = '/api/upload/'
     methods = ('POST',)

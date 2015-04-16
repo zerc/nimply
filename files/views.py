@@ -3,7 +3,8 @@ import os
 
 from werkzeug import secure_filename
 from flask_restful import Resource
-from flask import request
+from flask import request, abort
+from gridfs import GridFS, NoFile
 
 from .formatters import highlight
 from .bl.wrapper import SourceFile
@@ -37,13 +38,18 @@ api.add_resource(FilesResource, '/api/files/')
 
 
 class FileDetailResource(Resource):
-    def get(self, fname):
+    def get(self, uuid):
         """ Detail file.
         """
-        result = {}
-        wrapper = SourceFile(app.config, fname)
-        data, filename = wrapper.data, wrapper.fname
-        result['code'] = highlight(filename, data)
-        return result
+        storage = GridFS(app.app.mongo.db)
 
-api.add_resource(FileDetailResource, '/api/files/<string:fname>/')
+        try:
+            fobject = storage.get_version(uuid=uuid, version=0)
+        except NoFile:
+            abort(404)
+
+        code, filename = fobject.read(), fobject.filename
+        return dict(code=highlight(filename, code.decode('utf-8'), uuid=uuid),
+                    filename=filename)
+
+api.add_resource(FileDetailResource, '/api/files/<string:uuid>/')
