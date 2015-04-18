@@ -1,13 +1,9 @@
 # coding: utf-8
 import json
-from flask import Flask
+
+from flask import Flask, render_template
+from flask.ext.script import Manager
 from flask.ext.pymongo import PyMongo
-
-from nimply.app import app as nimply
-from files.app import app as files_app
-from comments.app import app as comments_app
-
-from files.formatters import WithCommentsHtmlFormatter
 
 app = Flask(
     __name__,
@@ -15,18 +11,28 @@ app = Flask(
     static_folder='static/build/',
     static_url_path='/static')
 
-app.mongo = PyMongo(app)
-
 app.config.from_object('settings')
-
 app.jinja_env.add_extension('pyjade.ext.jinja.PyJadeExtension')
 app.jinja_env.filters['jsonify'] = json.dumps
 
-app.register_blueprint(nimply)
-app.register_blueprint(files_app)
-app.register_blueprint(comments_app)
+
+mongo = PyMongo(app)
+manager = Manager(app)
 
 
+def register_blueprints(app):
+    from files import files_app
+    from nimply import nimply_app
+    from comments import comments_app
+
+    app.register_blueprint(nimply_app)
+    app.register_blueprint(files_app)
+    app.register_blueprint(comments_app)
+
+register_blueprints(app)
+
+
+from files.formatters import WithCommentsHtmlFormatter
 @app.context_processor
 def get_code_styles():
     formatter = WithCommentsHtmlFormatter('')

@@ -5,7 +5,6 @@ from datetime import datetime
 from collections import OrderedDict
 
 from dateutil.parser import parse
-from comments.app import app
 
 
 class MongoCommentsWrapper(object):

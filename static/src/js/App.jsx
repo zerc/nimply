@@ -4,10 +4,12 @@ var L = require('./Libs.js'),
     Route = L.Router.Route,
     DefaultRoute = L.Router.DefaultRoute,
 
-    FileView = require('./FileView.jsx'),
-    VariantsView = require('./VariantsView.jsx'),
+    Files = require('./Files/init.js'),
+    FileDetailView = Files.FileDetailView,
+    FileListView = Files.FileListView,
+    FileUploadView = Files.FileUploadView,
 
-    App = L.React.createClass({
+    App = React.createClass({
         render: function () {
           return (
             <div>
@@ -17,10 +19,21 @@ var L = require('./Libs.js'),
         }
     }),
 
+    IndexPageView = React.createClass({
+        render: function () {
+            return (
+                <div>
+                    <FileListView />
+                    <FileUploadView />
+                </div>
+            );
+        }
+    });
+
     ROUTES = (
         <Route name="app" path="/" handler={App}>
-            <Route name="fileview" path="/file/?:fname?" handler={FileView} />
-            <DefaultRoute handler={VariantsView} />
+            <Route name="fileview" path="/file/?:uuid?" handler={FileDetailView} />
+            <DefaultRoute handler={IndexPageView} />
         </Route>
     );
 

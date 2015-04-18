@@ -1,22 +1,53 @@
 # coding: utf-8
 import os
+from uuid import uuid4
 
 from werkzeug import secure_filename
-from flask_restful import Resource
-from flask import request, abort
+from flask_restful import Resource, Api
+from flask import request, abort, Blueprint
 from gridfs import GridFS, NoFile
 
+from app import mongo, app
 from .formatters import highlight
-from .bl.wrapper import SourceFile
-from .app import api, app
 
 
+files_app = Blueprint('files',  __name__, template_folder='templates')
+api = Api(files_app)
+
+
+class FilesWrapper(object):
+    def __init__(self, db, *args, **kwargs):
+        self.storage = GridFS(db)
+
+    def list(self):
+        """ Returns are list of files.
+        """
+        return [{'name': f.filename, 'uuid': f.uuid, 'version': f.version}
+                for f in self.storage.find()]
+
+    def get(self, uuid, version=0):
+        """ Return selected file or None if they does not exists.
+        """
+        try:
+            return self.storage.get_version(uuid=uuid, version=version)
+        except NoFile:
+            return None
+
+    def add(self, file):
+        """ Save file into storage. Give him uuid.
+        """
+        uuid = unicode(uuid4())
+        self.storage.put(file, filename=file.filename,  uuid=uuid, version=0)
+        return uuid
+
+
+@api.resource('/api/files/')
 class FilesResource(Resource):
     def get(self):
         """ List of files.
         """
-        upload_dir = app.config['UPLOAD_FOLDER']
-        return os.listdir(upload_dir)
+        wrapper = FilesWrapper(mongo.db)
+        return wrapper.list()
 
     def post(self):
         """ Upload new file.
@@ -25,31 +56,25 @@ class FilesResource(Resource):
         if not file or not self.allowed_file(file.filename):
             return {}, 400
 
-        filename = secure_filename(file.filename)
-        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        file.save(filepath)
-        return {'filename': filename}
+        wrapper = FilesWrapper(mongo.db)
+        uuid = wrapper.add(file)
+        return {'uuid': uuid}
 
     def allowed_file(self, fname):
         ext = os.path.splitext(fname)[-1]
         return ext in app.config['ALLOWED_EXTENSIONS']
 
-api.add_resource(FilesResource, '/api/files/')
 
-
+@api.resource('/api/files/<string:uuid>/')
 class FileDetailResource(Resource):
     def get(self, uuid):
         """ Detail file.
         """
-        storage = GridFS(app.app.mongo.db)
-
-        try:
-            fobject = storage.get_version(uuid=uuid, version=0)
-        except NoFile:
+        wrapper = FilesWrapper(mongo.db)
+        fobject = wrapper.get(uuid)
+        if not fobject:
             abort(404)
 
         code, filename = fobject.read(), fobject.filename
         return dict(code=highlight(filename, code.decode('utf-8'), uuid=uuid),
                     filename=filename)
-
-api.add_resource(FileDetailResource, '/api/files/<string:uuid>/')

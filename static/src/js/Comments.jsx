@@ -26,7 +26,7 @@ var L = require('./Libs.js'),
         },
 
         appendComment: function (comment) {
-            this.state.comments.push(comment);
+            this.state.comments.unshift(comment);
             this.forceUpdate();
         },
 
@@ -67,7 +67,7 @@ var L = require('./Libs.js'),
             var self = this,
                 author = React.findDOMNode(this.refs.author).value.trim(),
                 message = React.findDOMNode(this.refs.message).value.trim(),
-                fname = this.context.router.getCurrentParams().fname,
+                uuid = this.context.router.getCurrentParams().uuid,
                 form_data = {line: this.props.line,};
 
             if (!author || !message) {
@@ -78,7 +78,7 @@ var L = require('./Libs.js'),
             form_data['author'] = author;
 
             L.request
-                .post(API_URLS.comments_add(fname),
+                .post(API_URLS.comments_add(uuid),
                       form_data,
                       {responseType: 'json'})
                 .then(function (response) {
