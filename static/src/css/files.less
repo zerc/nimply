@@ -1,0 +1,119 @@
+@import 'consts.less';
+
+@row_select_color:     #AEAEAE;
+
+.highlight {
+    margin-top: 0;
+    margin-bottom: 1px;
+    position: relative;
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    margin-top: -15px;
+
+    td {
+        padding: 0;
+        border: 0;
+    }
+
+    td.highlight__linenum {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        text-align: right;
+        vertical-align: top;
+        width: 1%;
+        padding-right: 5px;
+        padding-left: 5px;
+        border-right: 1px solid @row_select_color;
+        background-color: #EFEFEF;
+        cursor: pointer;
+    }
+
+    .have_comments > td.highlight__linenum {
+        background-color: @row_select_color;
+    }
+
+    td.highlight__linenum:hover {
+        background-color: @row_select_color;
+        text-decoration: underline;
+    }
+
+    td.highlight__linenum:before {
+      content: attr(data-linenum);
+    }
+
+    td.highlight__code {
+        white-space: pre;
+        overflow: visible;
+        word-wrap: normal;
+        vertical-align: top;
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+
+    .have_comments > td.highlight__code {
+        background-color: #FAEBD7;
+    }
+}
+
+.files_list {
+    li {
+        list-style: none;
+    }
+    .files_list__title {
+    }
+    .files_list__item__comments {
+        width: 25px;
+        display: -moz-inline-stack;
+        display: inline-block;
+        background: @main-color;
+        text-align: center;
+        margin-right: 10px;
+        border-radius: 5px;
+        color: #FFF;
+    }
+}
+
+
+.file_add {
+    .file_add__upload_area {
+        height: 80px;
+        border: 4px dashed #EEE;
+        text-align: center;
+        padding-top: 20px;
+
+        &-drop_disabled {
+            border: none;
+            text-align: left;
+            padding: 0;
+
+            .file_add__button {
+                margin:0;
+            }
+        }
+
+        &:hover {
+            border-color: #1EAEDB;
+        }
+    }
+
+    .file_add__button {
+            position: relative;
+            overflow: hidden;
+            margin: 10px;
+    }
+
+    input.file_add__button {
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin: 0;
+        padding: 0;
+        font-size: 20px;
+        cursor: pointer;
+        opacity: 0;
+        filter: alpha(opacity=0);
+    }
+}

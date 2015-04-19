@@ -10,12 +10,11 @@ var L = require('../Libs.js'),
             router: React.PropTypes.func
         },
 
-        doUpload: function (event) {
-            var files = event.target.files,
-                form_data = new FormData(),
-                self = this;
+        upload: function (file) {
+            var self = this,
+                form_data = new FormData();
 
-            form_data.append('file', files[0]);
+            form_data.append('file', file);
 
             L.request.post(
                 API_URLS.FILES_BASE,
@@ -28,12 +27,54 @@ var L = require('../Libs.js'),
             });
         },
 
-        render: function () {
-            var self = this;
+        doUpload: function (event) {
+            var file = event.target.files[0];
 
-            return (<div className="varinat_block">
-                <h4>{'Upload file:'}</h4>
-                <input type="file" name="file" ref="fileInput" onChange={self.doUpload} />
+            event.preventDefault();
+
+            if (file) {
+                this.upload(file);
+            }
+        },
+
+        doDrop: function (event) {
+            var file = event.dataTransfer.files[0];
+
+            event.preventDefault();
+
+            if (file) {
+                this.upload(file);
+            }
+        },
+
+        preventDefault: function (event) {
+            event.preventDefault();
+        },
+
+        render: function () {
+            var self = this,
+                drop_support = !(typeof(window.FileReader) == 'undefined'),
+                css_class = 'file_add__upload_area';
+
+            if (!drop_support) {
+                css_class = css_class + '-' + 'drop_disabled';
+            }
+
+            return (
+                <div className="file_add">
+                    <h5>Add file using:</h5>
+                    <div className={css_class}
+                         onDragOver={self.preventDefault}
+                         onDrop={self.doDrop}>
+                        <div className="file_add__button button button-primary">
+                            <span>Upload</span>
+                            <input className="file_add__button"
+                                   type="file"
+                                   name="file"
+                                   ref="fileInput"
+                                   onChange={self.doUpload} />
+                        </div>
+                    </div>
                 </div>
             );
         }

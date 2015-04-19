@@ -1,5 +1,6 @@
 # coding: utf-8
 from datetime import datetime
+from collections import OrderedDict
 
 from flask import request, Blueprint
 from flask_restful import Resource, Api
@@ -60,6 +61,27 @@ class CommentsWrapper(object):
             return sorted(comments, key=lambda c: c['date'], reverse=True)
 
         return _get
+
+    def get_grouped_counts(self, uuids, limit=20):
+        """ Aggregate comments counts for selected `uuids`.
+        """
+        pipeline = [
+            {'$match': {'uuid': {'$in': uuids}}},
+            {'$group': {'_id': '$uuid', 'count': {'$sum': 1}}},
+            {'$sort': {'count': -1}},
+            {'$limit': limit},
+        ]
+
+        result = self.collection.aggregate(pipeline)
+
+        result = OrderedDict((r['_id'], r['count']) for r in
+                             result.get('result', []))
+
+        for u in uuids:
+            result.setdefault(u, 0)
+
+        return result.items()[:limit]
+
 
 
 class CommentsResource(Resource):

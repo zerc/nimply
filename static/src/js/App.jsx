@@ -21,12 +21,14 @@ var L = require('./Libs.js'),
 
     IndexPageView = React.createClass({
         render: function () {
-            return (
-                <div>
+            return (<div className="row">
+                <div className="four columns">
                     <FileListView />
+                </div>
+                <div className="eight columns">
                     <FileUploadView />
                 </div>
-            );
+                </div>);
         }
     });
 

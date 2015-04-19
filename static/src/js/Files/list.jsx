@@ -34,15 +34,21 @@ var L = require('../Libs.js'),
             var self = this,
                 files = this.state.files;
 
-            return (
-                <div className="varinat_block">
-                    <h4>{'Select exists file for review:'}</h4>
-                    <ol>
-                    {L._.map(files, function (fobj) {
-                        var href = self.context.router.makeHref('fileview', {'uuid': fobj.uuid});
-                        return (<li><a href={href}>{fobj.name}</a></li>);
-                    })}
-                    </ol></div>);
+            return (<ul className="files_list">
+                <li className="files_list__title">
+                    <h5>Public reviews</h5>
+                </li>
+                {L._.map(files, function (fobj) {
+                    var href = self.context.router.makeHref('fileview', {'uuid': fobj.uuid});
+                    return (
+                        <li className="files_list__item">
+                            <span className="files_list__item__comments" title="comments count">
+                                {fobj.comments || 0}
+                            </span>
+                            <a href={href}>{fobj.name}</a>
+                        </li>);
+                })}
+                </ul>);
         }
     });
 

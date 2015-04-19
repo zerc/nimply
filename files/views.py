@@ -8,6 +8,7 @@ from flask import request, abort, Blueprint
 from gridfs import GridFS, NoFile
 
 from app import mongo, app
+from comments import CommentsWrapper
 from .formatters import highlight
 
 
@@ -18,12 +19,22 @@ api = Api(files_app)
 class FilesWrapper(object):
     def __init__(self, db, *args, **kwargs):
         self.storage = GridFS(db)
+        self.comments_wrapper = CommentsWrapper(db)
 
     def list(self):
         """ Returns are list of files.
         """
-        return [{'name': f.filename, 'uuid': f.uuid, 'version': f.version}
-                for f in self.storage.find()]
+        uuids = {f.uuid: {'name': f.filename, 'uuid': f.uuid,
+                          'comments': 0, 'version': f.version}
+                 for f in self.storage.find()}
+
+        comments = self.comments_wrapper.get_grouped_counts(uuids.keys())
+
+        def _up(uuid, count):
+            uuids[uuid]['comments'] = count
+            return uuids[uuid]
+
+        return [_up(*c) for c in comments]
 
     def get(self, uuid, version=0):
         """ Return selected file or None if they does not exists.
