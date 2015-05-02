@@ -1,29 +1,46 @@
+@import 'consts.less';
+
+@gray_color:     #AEAEAE;
+
 .comments {
     background-color: #FFF;
     margin-left: -5px;
     padding-left: 5px;
     margin-right: -5px;
     padding-right: 5px;
-    margin-top: -10px;
+    margin-top: 0px;
+    border-right: 1px solid @gray_color;
 
     .comments__block {
         margin-top: 10px;
+        padding: 20px 15px;
     }
 
     .comments__block__header {
-        ont-size: 0.8em;
+        .comments__block__header__author {
+            font-size: 1.2em;
+            padding-right: 10px;
+        }
+
+        .comments__block__header__date {
+            font-size: 0.8em;
+            color: @gray_color;
+        }
     }
 
     .comments__block__message {}
 
     .comment_add_form {
-        padding: 15px 10px;
-        width: 50%;
-        padding-bottom: 10px;
-        padding-left: 0;
+        padding: 15px;
+        margin-left: -5px;
+        margin-right: -5px;
+        border: 1px solid @gray_color;
+        border-left: 0;
+        border-right: 0;
 
         .row {
             margin: 5px 0;
+            width: 50%;
         }
 
         .row > input,

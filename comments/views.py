@@ -83,7 +83,6 @@ class CommentsWrapper(object):
         return result.items()[:limit]
 
 
-
 class CommentsResource(Resource):
     def get(self, uuid):
         """ Fetch comments for file.

@@ -14,11 +14,15 @@ var L = require('../Libs.js'),
             this.setState({show_form: !this.state.show_form});
         },
 
+        element: function () {
+            return this.getDOMNode()
+        },
+
         render: function () {
-            var row_cls_name = !L._.isEmpty(this.props['data-comments']) ? 'have_comments' : '';
+            var row_cls_name = (!L._.isEmpty(this.props['data-comments']) || this.state.show_form ) ? 'have_comments' : '';
 
             return (
-                <tr className={row_cls_name}>
+                <tr className={row_cls_name} id={this.props.id}>
                     <td className="highlight__linenum"
                         onClick={this.toggleForm}
                         data-linenum={this.props['data-line']}>
@@ -60,7 +64,16 @@ var L = require('../Libs.js'),
                 self.setState({data: data});
             });
         },
+
+        componentDidUpdate: function () {
+            console.log('rendered');
+        },
+
         render: function () {
+            var self = this;
+
+            self.lines = [];
+
             if (this.getFileId() && L._.isEmpty(this.state)) {
                 this.loadFile();
             }
@@ -68,11 +81,19 @@ var L = require('../Libs.js'),
             if (this.state.data) {
                 return (
                     <table className="highlight"><tbody>
-                    {L._.map(this.state.data.code, function (line) {
-                        return <LineView
+                    {L._.map(this.state.data.code, function (line, i) {
+                        var line_view = <LineView
+                            key={'line-'+i}
+                            id={'line-'+i}
                             data-code={line.code}
                             data-line={line.line}
                             data-comments={line.comments} />
+
+                        if (line.comments.length > 0) {
+                            self.lines.push(line_view);
+                        }
+
+                        return line_view;
                     })}
                     </tbody></table>);
             }

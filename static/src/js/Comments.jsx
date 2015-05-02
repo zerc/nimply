@@ -10,7 +10,12 @@ var L = require('./Libs.js'),
             return (
                 <div className="comments__block">
                     <div className="comments__block__header">
-                        {this.props.date} / {this.props.author}
+                        <span className="comments__block__header__author">
+                            {this.props.author}
+                        </span>
+                        <span className="comments__block__header__date">
+                            {this.props.date}
+                        </span>
                     </div>
                     <div className="comments__block__message">
                         {this.props.message}
@@ -96,10 +101,9 @@ var L = require('./Libs.js'),
                     <div className="row">
                         <textarea name="message" placeholder="message" ref="message"></textarea>
                         <div>
+                            <div className="six columns">&nbsp;</div>
                             <div className="six columns">
                                 <button className="second_button" onClick={this.hideForm}>Cancel</button>
-                            </div>
-                            <div className="six columns">
                                 <button className="primary_button pull_right" onClick={this.postForm}>Post</button>
                             </div>
                         </div>

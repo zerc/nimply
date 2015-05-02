@@ -38,15 +38,23 @@ button {
 }
 
 button.second_button {
-    background-color: #DA4545;
-    color: #FFF;
-    border-color: #992424;
+    background-color: #FFF;
+    color: #444;
+    border-color: #444;
+
+    &:hover {
+      background-color: darken(#FFF, 10%);
+    }
 }
 
 button.primary_button {
-    background-color: #28DA96;
+    background-color: @main-color;
     color: #FFF;
-    border-color: #2BA878;
+    border-color: darken(@main-color, 10%);
+
+    &:hover {
+      background-color: saturate(@main-color, 10%);
+    }
 }
 
 form, input, ol, ul {

@@ -1,6 +1,6 @@
 @import 'consts.less';
 
-@row_select_color:     #AEAEAE;
+@row_select_color:     fadeout(@main-color, 50%);
 
 .highlight {
     margin-top: 0;
@@ -26,13 +26,13 @@
         width: 1%;
         padding-right: 5px;
         padding-left: 5px;
-        border-right: 1px solid @row_select_color;
         background-color: #EFEFEF;
         cursor: pointer;
     }
 
     .have_comments > td.highlight__linenum {
         background-color: @row_select_color;
+        color: #FFF;
     }
 
     td.highlight__linenum:hover {
@@ -54,7 +54,7 @@
     }
 
     .have_comments > td.highlight__code {
-        background-color: #FAEBD7;
+        background-color: @row_select_color;
     }
 }
 
