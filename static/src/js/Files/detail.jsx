@@ -4,7 +4,10 @@
 var L = require('../Libs.js'),
     React = L.React,
     API_URLS = require('../Urls.js'),
-    CommentsBlock = require('../Comments.jsx'),
+    Comments = require('../Comments/init.jsx'),
+
+    CommentsList = Comments.CommentsList,
+    NavPanel = Comments.NavPanel,
 
     LineView = React.createClass({
         getInitialState: function() {
@@ -29,7 +32,7 @@ var L = require('../Libs.js'),
                     </td>
                     <td className="highlight__code">
                         <span dangerouslySetInnerHTML={{__html: this.props['data-code'] }}></span>
-                        <CommentsBlock
+                        <CommentsList
                             comments={this.props['data-comments']}
                             showform={this.state.show_form}
                             formcontrol={this.toggleForm}
@@ -65,21 +68,18 @@ var L = require('../Libs.js'),
             });
         },
 
-        componentDidUpdate: function () {
-            console.log('rendered');
-        },
-
         render: function () {
-            var self = this;
+            var self = this,
+                code = null;
 
-            self.lines = [];
+            self.lines_with_comments = [];
 
             if (this.getFileId() && L._.isEmpty(this.state)) {
                 this.loadFile();
             }
 
             if (this.state.data) {
-                return (
+                code = (
                     <table className="highlight"><tbody>
                     {L._.map(this.state.data.code, function (line, i) {
                         var line_view = <LineView
@@ -89,15 +89,24 @@ var L = require('../Libs.js'),
                             data-line={line.line}
                             data-comments={line.comments} />
 
-                        if (line.comments.length > 0) {
-                            self.lines.push(line_view);
+                        if (!L._.isEmpty(line.comments)) {
+                            self.lines_with_comments.push(line_view.key);
                         }
 
                         return line_view;
                     })}
-                    </tbody></table>);
+                    </tbody></table>)
+
+                return (
+                    <span>
+                        <NavPanel
+                            data-comments-lines={self.lines_with_comments}
+                            data-filename={self.state.data.filename} />
+                        {code}
+                    </span>
+                );
             }
-            return null;
+            return code;
         }
     });
 

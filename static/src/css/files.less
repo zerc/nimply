@@ -3,13 +3,11 @@
 @row_select_color:     fadeout(@main-color, 50%);
 
 .highlight {
-    margin-top: 0;
     margin-bottom: 1px;
     position: relative;
     width: 100%;
     border-collapse: collapse;
     border-spacing: 0;
-    margin-top: -15px;
 
     td {
         padding: 0;
@@ -38,6 +36,7 @@
     td.highlight__linenum:hover {
         background-color: @row_select_color;
         text-decoration: underline;
+        cursor: pointer;
     }
 
     td.highlight__linenum:before {

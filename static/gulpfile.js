@@ -23,6 +23,13 @@ gulp.task('vendor', function() {
 
     gulp.src('./node_modules/normalize.css/normalize.css')
         .pipe(gulp.dest(SETTINGS.LESS_DEST));
+
+    gulp.src('./src/font-awesome/fonts/*')
+        .pipe(gulp.dest('./build/fonts/'));
+
+    gulp.src('./src/font-awesome/less/font-awesome.less')
+        .pipe(less())
+        .pipe(gulp.dest(SETTINGS.LESS_DEST));
 });
 
 gulp.task('less', function () {

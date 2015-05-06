@@ -8,8 +8,7 @@
     padding-left: 5px;
     margin-right: -5px;
     padding-right: 5px;
-    margin-top: 0px;
-    border-right: 1px solid @gray_color;
+    margin-top: -10px;
 
     .comments__block {
         margin-top: 10px;
@@ -34,9 +33,7 @@
         padding: 15px;
         margin-left: -5px;
         margin-right: -5px;
-        border: 1px solid @gray_color;
-        border-left: 0;
-        border-right: 0;
+        border-top: 1px dashed @gray_color;
 
         .row {
             margin: 5px 0;
@@ -51,5 +48,64 @@
         .row > textarea {
             margin-bottom: 5px;
         }
+    }
+}
+
+.nav_panel_block,
+.nav_panel_block-fixed {
+    background-color: #AEAEAE;
+    width: 960px;
+    z-index: 999999;
+    vertical-align: middle;
+    height: 35px;
+
+    &-fixed {
+        position: fixed;
+        top: 0;
+    }
+
+    &__comment_count {
+        color: @main-color;
+    }
+
+    &__delimetr {
+        margin: 0 5px;
+        color: #F2F2F2;
+
+    }
+
+    &__current_line {
+        color: #FFF;
+    }
+
+    .nav_panel__filename {
+        float: left;
+        margin:5px 0 0 10px;
+    }
+
+    .nav_panel_block__next_comment,
+    .nav_panel_block__prev_comment {
+        color: @main-color;
+        padding-right: 9px;
+        padding-top: 5px;
+
+        &:hover {
+            cursor: pointer;
+            color: #FFF;
+            background-color: @main-color;
+        }
+    }
+
+    .nav_panel_block__next_comment {
+        float: left;
+        padding-left: 8px;
+
+    }
+
+    .nav_panel_block__prev_comment {
+        float: right;
+        padding-left: 8px;
+        padding-top: 3px;
+        padding-bottom: 2px;
     }
 }
