@@ -80,7 +80,36 @@
 
     .nav_panel__filename {
         float: left;
-        margin:5px 0 0 10px;
+        padding: 5px 10px 5px 10px;
+        background-color: #808080;
+        color: #fff;
+    }
+
+    .nav_panel__filename_triangle {
+        float: left;
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 17px 0 17px 10px;
+        border-color: transparent transparent transparent #808080;
+
+    }
+
+    .nav_panel__summary__item {
+        display: inline-block;
+        margin-top: 5px;
+        margin-left: 10px;
+        border-bottom: 1px dashed #222;
+
+        &:hover {
+            border-bottom: none;
+            cursor: pointer;
+        }
+
+        &__active {
+            border-bottom: none;
+            color: @main-color;
+        }
     }
 
     .nav_panel_block__next_comment,

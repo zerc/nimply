@@ -11,8 +11,11 @@ var L = require('../Libs.js'),
             var self = this;
 
             SignalsBus.commentAdded.add(function (comment, line_id) {
-                self.state.lines.push(line_id);
-                self.setState({lines_count: self.state.lines_count + 1});
+                if (!self.state.lines_dict[line_id]) {
+                    self.state.lines.push(line_id);
+                    self.state.lines_dict[line_id] = true;
+                    self.setState({'lines_count': self.state.lines_count + 1});
+                }
             });
 
             window.onscroll = function () {
@@ -27,96 +30,46 @@ var L = require('../Libs.js'),
 
         getInitialState: function() {
             var lines = this.props['data-comments-lines'] || [],
-                line = L._.isEmpty(lines) ? null : 0,
+                lines_dict = {},
                 lines_count = lines.length;
 
+            L._.each(lines, function (line) {
+                lines_dict[line] = true; // TODO: store comments count
+            });
+
             return {'lines': lines,
-                    'current_line': line,
+                    'current_line': null,
+                    'lines_dict': lines_dict,
                     'lines_count': lines_count,
                     'css_class': 'nav_panel_block'}
         },
 
-        _prepare_comment_line: function () {
-            if (L._.isNull(this.state.current_line)) {
-                return null;
-            }
-
-            var line = this.state.current_line,
-                val = this.state.lines[line],
-                el = document.getElementById(val);
-
-            el.scrollIntoViewIfNeeded();
-
-            return el;
-        },
-
-        next_comment_line: function () {
-            var el = this._prepare_comment_line(),
-                line;
+        goToLine: function (line) {
+            var el = document.getElementById(line);
 
             if (!L._.isNull(el)) {
-                if (this.state.current_line === this.state.lines_count - 1) {
-                    line = 0;
-                } else {
-                    line = this.state.current_line + 1;
-                }
-                this.setState({current_line: line});
+                el.scrollIntoViewIfNeeded();
+                this.setState({'current_line': line});
             }
-        },
-
-        prev_comment_line: function () {
-            var el = this._prepare_comment_line(),
-                line;
-
-            if (!L._.isNull(el)) {
-                if (this.state.current_line === 0) {
-                    line = this.state.lines_count - 1;
-                } else {
-                    line = this.state.current_line - 1;
-                }
-                this.setState({current_line: line});
-            }
-        },
-
-        current_line_display: function () {
-            if (L._.isNull(this.state.current_line) || this.state.current_line > 0) {
-                return (<i className="fa fa-paperclip fa-2x nav_panel_block__comment_count">
-                        {this.state.lines_count}
-                    </i>);
-            }
-
-            if (this.state.current_line === 0) {
-                return (
-                    <i className="fa fa-paperclip fa-2x nav_panel_block__comment_count">
-                        {this.state.lines_count}
-                        <span className="nav_panel_block__delimetr">/</span>
-                        <span className="nav_panel_block__current_line">
-                            {this.state.current_line+1}
-                        </span>
-                    </i>);
-            }
-        },
-
-        line_is_visble: function (line) {
-            var line_id = this.state.lines[line],
-                el = document.getElementById(line_id),
-                current_scroll = window.scrollY;
-            return (el.offsetTop <= current_scroll && current_scroll <= (el.offsetTop + el.offsetHeight));
         },
 
         render: function () {
-            var current_line = this.current_line_display();
+            var self = this,
+                summary = L._.map(this.state.lines, function (line) {
+                    var go = function () { return self.goToLine(line); },
+                        css_class = 'nav_panel__summary__item' + (self.state.current_line === line ? ' nav_panel__summary__item__active': '');
+
+                    return <span
+                        className={css_class}
+                        onClick={go}>{line}</span>
+                });
+
             return (
                 <div className={this.state.css_class}>
-                    <i className="fa fa-angle-double-down fa-2x nav_panel_block__next_comment"
-                       onClick={this.next_comment_line}
-                       title="Next line with comments"></i>
-
                     <span className="nav_panel__filename">{this.props['data-filename']}</span>
+                    <span className="nav_panel__filename_triangle"></span>
 
-                    <i className="fa fa-angle-double-up fa-2x nav_panel_block__prev_comment"
-                       onClick={this.prev_comment_line}
-                       title="Prev line with comments"></i>
+                    <span className="nav_panel__summary">{summary}</span>
                 </div>
             );
         }

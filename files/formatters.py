@@ -26,7 +26,7 @@ def highlight(filename, code, uuid):
             code=code,
             comments=comments.get_for_line(uuid, line)
             ) for line, code in
-            enumerate(result.splitlines(), 1)]
+            enumerate(result.splitlines(), 0)]
 
 
 class WithCommentsHtmlFormatter(HtmlFormatter):
@@ -41,7 +41,7 @@ class WithCommentsHtmlFormatter(HtmlFormatter):
         return self._wrap_code(source)
 
     def _wrap_code(self, source):
-        for line, row in enumerate(source, 1):
+        for line, row in enumerate(source, 0):
             yield row
 
     def _wrap_inlinelinenos(self, inner):
